@@ -6,7 +6,7 @@ class Walker {
   int lifeForce = int(random(300, 1000))/10;
   Boolean alive = true;
   float accel;
-  int xdir, ydir;
+  float xdir, ydir;
 
   Walker(int _x, int _y, color c) {
     xpos = _x;
@@ -16,19 +16,19 @@ class Walker {
     maxRadius = (int)random(50);
     c0 = c;   
     c0 = color(red(c0), green(c0), blue(c0), alpha(c0)); 
-    accel = random(5)+0.1;
+    accel = random(9)+0.1;
     xdir = randomDirection();
     ydir = randomDirection(); 
     println("Walker with color "+hex(c)+" at "+x0+" "+y0+" "+xdir+" "+ydir);
   }  
 
-  int randomDirection() {
+  float randomDirection() {
     float x = random(-1, 1);
     if(x<0) {
-      return -1;
+      return x;
     } 
     else {
-      return 1;
+      return x;
     }
   }
 
@@ -61,7 +61,7 @@ int ticker = 0;
 PImage img;
 
 void setup() {
-  img = loadImage("santa.jpg");
+  img = loadImage("cow.jpg");
   size(img.width, img.height);
   colorMode(RGB);
   smooth();
