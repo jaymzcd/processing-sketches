@@ -16,10 +16,10 @@ class Walker {
     maxRadius = (int)random(50);
     c0 = c;   
     c0 = color(red(c0), green(c0), blue(c0), alpha(c0)); 
-    accel = random(9)+0.1;
+    accel = random(-5, 5);
     xdir = randomDirection();
     ydir = randomDirection(); 
-    println("Walker with color "+hex(c)+" at "+x0+" "+y0+" "+xdir+" "+ydir);
+    //println("Walker with color "+hex(c)+" at "+x0+" "+y0+" "+xdir+" "+ydir);
   }  
 
   float randomDirection() {
@@ -33,7 +33,7 @@ class Walker {
   }
 
   void update(int ticker) {
-    radius += 0.1;
+    radius += 1;
     x0 = xpos;
     y0 = ypos;
     xpos += (xdir*accel);
@@ -45,14 +45,15 @@ class Walker {
     } 
     else {
       lifeForce--;
-      c0 = color(red(c0), green(c0), blue(c0), alpha(c0)-10);
+      c0 = color(red(c0), green(c0), blue(c0), alpha(c0)-20);
     }
   }
 
   void draw() {
     fill(c0);
     stroke(c0);
-    line(x0, y0, xpos, ypos);
+    //line(x0, y0, xpos, ypos);
+    ellipse(x0, y0, radius, radius);
   }
 }
 
@@ -61,7 +62,7 @@ int ticker = 0;
 PImage img;
 
 void setup() {
-  img = loadImage("cow.jpg");
+  img = loadImage("santa.jpg");
   size(img.width, img.height);
   colorMode(RGB);
   smooth();
@@ -88,7 +89,7 @@ void draw() {
 void mouseClicked() {
   img.loadPixels();
 
-  int count = 500;
+  int count = 1000;
   for(int x=0; x<count; x++) {
     int xin = int(random(0, width));
     int  yin = int(random(0, height));  
