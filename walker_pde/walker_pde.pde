@@ -19,7 +19,7 @@ class Walker {
     accel = random(9)+0.1;
     xdir = randomDirection();
     ydir = randomDirection(); 
-    println("Walker with color "+hex(c)+" at "+x0+" "+y0+" "+xdir+" "+ydir);
+    //println("Walker with color "+hex(c)+" at "+x0+" "+y0+" "+xdir+" "+ydir);
   }  
 
   float randomDirection() {
@@ -61,7 +61,7 @@ int ticker = 0;
 PImage img;
 
 void setup() {
-  img = loadImage("cow.jpg");
+  img = loadImage("b33.jpg");
   size(img.width, img.height);
   colorMode(RGB);
   smooth();
@@ -88,7 +88,7 @@ void draw() {
 void mouseClicked() {
   img.loadPixels();
 
-  int count = 500;
+  int count = 5000;
   for(int x=0; x<count; x++) {
     int xin = int(random(0, width));
     int  yin = int(random(0, height));  
