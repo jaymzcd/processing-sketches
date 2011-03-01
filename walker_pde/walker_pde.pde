@@ -3,9 +3,9 @@ class Walker {
   int x0, y0;
   float radius, maxRadius = 1;
   color c0;
-  int lifeForce = int(random(300, 1000))/10;
+  int lifeForce = int(random(1, 100))/1;
   Boolean alive = true;
-  float accel;
+  float xaccel, yaccel;
   float xdir, ydir;
 
   Walker(int _x, int _y, color c) {
@@ -13,10 +13,11 @@ class Walker {
     ypos = _y;
     x0 = int(_x);
     y0 = int(_y);
-    maxRadius = (int)random(50);
+    maxRadius = (int)random(15);
     c0 = c;   
-    c0 = color(red(c0), green(c0), blue(c0), alpha(c0)); 
-    accel = random(9)+0.1;
+    c0 = color(red(c0), green(c0), blue(c0), alpha(c0)/2); 
+    xaccel = random(1, 5);
+    yaccel = random(1, 5);
     xdir = randomDirection();
     ydir = randomDirection(); 
     //println("Walker with color "+hex(c)+" at "+x0+" "+y0+" "+xdir+" "+ydir);
@@ -25,27 +26,39 @@ class Walker {
   float randomDirection() {
     float x = random(-1, 1);
     if(x<0) {
-      return x;
+      return -1;
     } 
     else {
-      return x;
+      return 1;
     }
   }
 
   void update(int ticker) {
-    radius += 0.1;
+    if(ticker%2==0) {
+      if (radius<maxRadius) {
+        radius += 0.5;
+      } else {
+         radius = 0;
+      }
+    }
+    
     x0 = xpos;
     y0 = ypos;
-    xpos += (xdir*accel);
-    ypos += (ydir*accel);
-    xpos += int((cos(ticker)*radius-sin(ticker)*radius));
-    ypos += int((sin(ticker)*radius + cos(ticker)*radius));
-    if(lifeForce<0) {
+    xpos += (xdir*xaccel);
+    ypos += (ydir*yaccel);
+    xpos += xdir*int((cos(ticker)*radius-sin(ticker)*radius));
+    ypos += ydir*int((sin(ticker)*radius + cos(ticker)*radius));
+    float itemAlpha = alpha(c0)-2;
+    if(itemAlpha<0) {
+      itemAlpha = 0;
+    }        
+    c0 = color(red(c0), green(c0), blue(c0), itemAlpha);
+    
+    if(lifeForce<0||itemAlpha==0) {
       alive = false;
     } 
     else {
       lifeForce--;
-      c0 = color(red(c0), green(c0), blue(c0), alpha(c0)-10);
     }
   }
 
@@ -53,16 +66,18 @@ class Walker {
     fill(c0);
     stroke(c0);
     line(x0, y0, xpos, ypos);
+    //ellipse(xpos, ypos, radius/2, radius/2);
   }
 }
 
 ArrayList Walkers = new ArrayList();
 int ticker = 0;
+float SCALE = 1;
 PImage img;
 
 void setup() {
-  img = loadImage("b33.jpg");
-  size(img.width, img.height);
+  img = loadImage("nike.jpg");
+  size(int(SCALE*img.width), int(SCALE*img.height));
   colorMode(RGB);
   smooth();
   noStroke();
@@ -93,7 +108,7 @@ void mouseClicked() {
     int xin = int(random(0, width));
     int  yin = int(random(0, height));  
     try {
-      color c = img.pixels[yin*width+xin];
+      color c = img.pixels[int((yin/SCALE)*(width/SCALE)+(xin/SCALE))];
       addWalker(xin, yin, c);
     } 
     catch (ArrayIndexOutOfBoundsException e) {
