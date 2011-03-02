@@ -1,23 +1,24 @@
 PImage img;
-int STEP = 10; // sampling of image per input point
-int SCAN_STEP = 20; // number of pixels to jump over to form a grid for main
-int TOLERANCE = 10; // range to allow other colors to fall within
-int STROKE_ALPHA = 10; // val for our connecting lines
-int DISTANCE_DELTA = 0; // minium distance before drawing a connector
+int STEP = 5; // sampling of image per input point
+int SCAN_STEP = 10; // number of pixels to jump over to form a grid for main
+int TOLERANCE = 20; // range to allow other colors to fall within
+int STROKE_ALPHA = 5; // val for our connecting lines
+int MIN_DISTANCE_DELTA = 0; // minium distance before drawing a connector
+int MAX_DISTANCE_DELTA = 100; // max distance before drawing a connector
 int BLACK_TOLERANCE = 10; // colors less bright than this are "black"
-int SAT_TOLERANCE = 10; // colors must have at least this saturation
+int SAT_TOLERANCE = 0; // colors must have at least this saturation
 Boolean IGNORE_BLACKS = true;
 
 void setup() {
-  img = loadImage("box.jpg");
+  img = loadImage("vans.jpg");
   size(img.width, img.height);
   background(0);
   noFill();
   smooth();
   img.loadPixels();
-  tint(255, 40);
-  image(img, 0, 0);
-  //doGrid();
+  tint(255, 20);
+  //image(img, 0, 0);
+  doGrid();
 }
 
 void draw() {
@@ -59,8 +60,9 @@ void processColorPoint(int inX, int inY) {
   for (int i=0; i<width; i+=STEP) {
     for(int j=0; j<height; j+=STEP) {
       
-      if (distanceForPoints(inX, inY, i, j)<DISTANCE_DELTA) {
-        continue; // We are not far away enough to draw a line
+      int pointDistance = distanceForPoints(inX, inY, i, j);
+      if (pointDistance<MIN_DISTANCE_DELTA||pointDistance>MAX_DISTANCE_DELTA) {
+        continue; // We are not within the right distance
       }
       
       color csrc = img.pixels[j*width+i];
