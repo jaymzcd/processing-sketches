@@ -1,16 +1,16 @@
 PImage img;
-int STEP = 5; // sampling of image per input point
+int STEP = 10; // sampling of image per input point
 int SCAN_STEP = 10; // number of pixels to jump over to form a grid for main
-int TOLERANCE = 20; // range to allow other colors to fall within
-int STROKE_ALPHA = 5; // val for our connecting lines
+int TOLERANCE = 30; // range to allow other colors to fall within
+int STROKE_ALPHA = 10; // val for our connecting lines
 int MIN_DISTANCE_DELTA = 0; // minium distance before drawing a connector
-int MAX_DISTANCE_DELTA = 100; // max distance before drawing a connector
-int BLACK_TOLERANCE = 10; // colors less bright than this are "black"
+int MAX_DISTANCE_DELTA = 50; // max distance before drawing a connector
+int BLACK_TOLERANCE = 5; // colors less bright than this are "black"
 int SAT_TOLERANCE = 0; // colors must have at least this saturation
 Boolean IGNORE_BLACKS = true;
 
 void setup() {
-  img = loadImage("vans.jpg");
+  img = loadImage("girly.png");
   size(img.width, img.height);
   background(0);
   noFill();
@@ -97,7 +97,7 @@ void doGrid() {
   for (int i=0; i<width; i+=SCAN_STEP) {
     for(int j=0; j<height; j+=SCAN_STEP) {
       color csrc = img.pixels[j*width+i];      
-      if(brightness(csrc)>BLACK_TOLERANCE&&IGNORE_BLACKS&&saturation(csrc)>SAT_TOLERANCE)
+      if(((brightness(csrc)>BLACK_TOLERANCE&&IGNORE_BLACKS)||!IGNORE_BLACKS)&&(saturation(csrc)>SAT_TOLERANCE))
         processColorPoint(i, j);
     }
   }
