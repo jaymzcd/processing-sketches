@@ -1,9 +1,11 @@
 PImage img;
-int STEP = 3; // sampling of image per input point
-int SCAN_STEP = 10; // number of pixels to jump over to form a grid for main
-int TOLERANCE = 5; // range to allow other colors to fall within
-int STROKE_ALPHA = 5; // val for our connecting lines
-int DISTANCE_DELTA = 1; // minium distance before drawing a connector
+int STEP = 20; // sampling of image per input point
+int SCAN_STEP = 20; // number of pixels to jump over to form a grid for main
+int TOLERANCE = 20; // range to allow other colors to fall within
+int STROKE_ALPHA = 40; // val for our connecting lines
+int DISTANCE_DELTA = 5; // minium distance before drawing a connector
+int BLACK_TOLERANCE = 50; // colors less bright than this are "black"
+int SAT_TOLERANCE = 100; // colors must have at least this saturation
 Boolean IGNORE_BLACKS = true;
 
 void setup() {
@@ -13,7 +15,8 @@ void setup() {
   noFill();
   smooth();
   img.loadPixels();
- 
+  tint(255, 40);
+  image(img, 0, 0);
   doGrid();
 }
 
@@ -52,17 +55,23 @@ void mousePressed() {
 
 void processColorPoint(int inX, int inY) {
   color c0 = img.pixels[inY*width+inX];
-  println(hex(c0));
+  println("Source point ("+inX+", "+inY+") color: "+hex(c0));
   for (int i=0; i<width; i+=STEP) {
     for(int j=0; j<height; j+=STEP) {
       
-      if (distanceForPoints(inX, inY, i, j)<DISTANCE_DELTA)
-        break; // We are not far away enough to draw a line
+      if (distanceForPoints(inX, inY, i, j)<DISTANCE_DELTA) {
+        continue; // We are not far away enough to draw a line
+      }
       
       color csrc = img.pixels[j*width+i];
 
-      if(brightness(csrc)<TOLERANCE&&IGNORE_BLACKS)
-         break;
+      if(brightness(csrc)<BLACK_TOLERANCE&&IGNORE_BLACKS) {
+          continue;
+      }
+
+      if(saturation(csrc)<SAT_TOLERANCE) {
+          continue; 
+      }
 
       // Now get our color deltas to compare to tolerances      
       int hDelta = hueDiff(c0, csrc);
@@ -70,9 +79,10 @@ void processColorPoint(int inX, int inY) {
       int sDelta = satDiff(c0, csrc);
       
       if(withinTolerance(hDelta)&&withinTolerance(vDelta)&&withinTolerance(sDelta)) {
-        println("Match for "+hex(csrc)+" at ("+i+", "+j+")");
+        //println("Match for "+hex(csrc)+" at ("+i+", "+j+")");
         stroke(red(c0), green(c0), blue(c0), STROKE_ALPHA);
-        bezier(inY, inY, 10, 10, 90, 90, i, j);
+        //bezier(inX, inY, 5, 0, 0, 5, i, j);
+        line(inX, inY, i, j);
       }
         
     } 
@@ -85,7 +95,7 @@ void doGrid() {
   for (int i=0; i<width; i+=SCAN_STEP) {
     for(int j=0; j<height; j+=SCAN_STEP) {
       color csrc = img.pixels[j*width+i];      
-      if(brightness(csrc)>TOLERANCE&&IGNORE_BLACKS)
+      if(brightness(csrc)>BLACK_TOLERANCE&&IGNORE_BLACKS&&saturation(csrc)>SAT_TOLERANCE)
         processColorPoint(i, j);
     }
   }
