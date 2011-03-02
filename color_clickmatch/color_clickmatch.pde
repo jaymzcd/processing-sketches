@@ -1,15 +1,15 @@
 PImage img;
-int STEP = 20; // sampling of image per input point
+int STEP = 10; // sampling of image per input point
 int SCAN_STEP = 20; // number of pixels to jump over to form a grid for main
-int TOLERANCE = 20; // range to allow other colors to fall within
-int STROKE_ALPHA = 40; // val for our connecting lines
-int DISTANCE_DELTA = 5; // minium distance before drawing a connector
-int BLACK_TOLERANCE = 50; // colors less bright than this are "black"
-int SAT_TOLERANCE = 100; // colors must have at least this saturation
+int TOLERANCE = 10; // range to allow other colors to fall within
+int STROKE_ALPHA = 10; // val for our connecting lines
+int DISTANCE_DELTA = 0; // minium distance before drawing a connector
+int BLACK_TOLERANCE = 10; // colors less bright than this are "black"
+int SAT_TOLERANCE = 10; // colors must have at least this saturation
 Boolean IGNORE_BLACKS = true;
 
 void setup() {
-  img = loadImage("girly.png");
+  img = loadImage("box.jpg");
   size(img.width, img.height);
   background(0);
   noFill();
@@ -17,7 +17,7 @@ void setup() {
   img.loadPixels();
   tint(255, 40);
   image(img, 0, 0);
-  doGrid();
+  //doGrid();
 }
 
 void draw() {
