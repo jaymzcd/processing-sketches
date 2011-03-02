@@ -2,11 +2,11 @@ PImage img;
 int STEP = 10; // sampling of image per input point
 int SCAN_STEP = 10; // number of pixels to jump over to form a grid for main
 int TOLERANCE = 30; // range to allow other colors to fall within
-int STROKE_ALPHA = 10; // val for our connecting lines
+int STROKE_ALPHA = 5; // val for our connecting lines
 int MIN_DISTANCE_DELTA = 0; // minium distance before drawing a connector
-int MAX_DISTANCE_DELTA = 50; // max distance before drawing a connector
-int BLACK_TOLERANCE = 5; // colors less bright than this are "black"
-int SAT_TOLERANCE = 0; // colors must have at least this saturation
+int MAX_DISTANCE_DELTA = 150; // max distance before drawing a connector
+int BLACK_TOLERANCE = 10; // colors less bright than this are "black"
+int SAT_TOLERANCE = 10; // colors must have at least this saturation
 Boolean IGNORE_BLACKS = true;
 
 void setup() {
@@ -57,6 +57,9 @@ void mousePressed() {
 void processColorPoint(int inX, int inY) {
   color c0 = img.pixels[inY*width+inX];
   println("Source point ("+inX+", "+inY+") color: "+hex(c0));
+  
+  int matchCount = 0;
+  
   for (int i=0; i<width; i+=STEP) {
     for(int j=0; j<height; j+=STEP) {
       
@@ -82,13 +85,19 @@ void processColorPoint(int inX, int inY) {
       
       if(withinTolerance(hDelta)&&withinTolerance(vDelta)&&withinTolerance(sDelta)) {
         //println("Match for "+hex(csrc)+" at ("+i+", "+j+")");
-        stroke(red(c0), green(c0), blue(c0), STROKE_ALPHA);
-        //bezier(inX, inY, 5, 0, 0, 5, i, j);
-        line(inX, inY, i, j);
+        matchCount++;
       }
-        
+      
     } 
   }
+  
+  if(matchCount>30) {
+     matchCount = 30; 
+  }
+  stroke(red(c0), green(c0), blue(c0), STROKE_ALPHA);
+  fill(red(c0), green(c0), blue(c0), 255);
+  ellipse(inX, inY, matchCount, matchCount);
+
 }
 
 void doGrid() {
