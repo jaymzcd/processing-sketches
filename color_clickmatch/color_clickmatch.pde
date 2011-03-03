@@ -4,21 +4,21 @@ int SCAN_STEP = 10; // number of pixels to jump over to form a grid for main
 int TOLERANCE = 30; // range to allow other colors to fall within
 int STROKE_ALPHA = 10; // val for our connecting lines
 int MIN_DISTANCE_DELTA = 0; // minium distance before drawing a connector
-int MAX_DISTANCE_DELTA = 50; // max distance before drawing a connector
+int MAX_DISTANCE_DELTA = 550; // max distance before drawing a connector
 int BLACK_TOLERANCE = 5; // colors less bright than this are "black"
 int SAT_TOLERANCE = 0; // colors must have at least this saturation
 Boolean IGNORE_BLACKS = true;
 
 void setup() {
-  img = loadImage("girly.png");
+  img = loadImage("explode.jpg");
   size(img.width, img.height);
   background(0);
   noFill();
   smooth();
   img.loadPixels();
-  tint(255, 20);
-  //image(img, 0, 0);
-  doGrid();
+  tint(255, 30);
+  image(img, 0, 0);
+  //doGrid();
 }
 
 void draw() {
